@@ -38,6 +38,7 @@ routes = [
 ```
 
 Pode utilizar o construtor de rotas - RouteBuilder
+
 Código:
 ```python
 from flaskrouter.router import RouteBuilder as Route
@@ -45,7 +46,7 @@ from flaskrouter.router import RouteBuilder as Route
 Route('user.index').rule('/user').view(hello)
     .methods('GET').build()
 ```
-Esta fnução irá gerar uma estrutura de 
+Esta função irá funcionar igual ao bloco:
 ```python
 {
     'endpoint': 'user.index',
