@@ -1,4 +1,3 @@
-from Routes import routes
 from flask import Flask
 from re import findall
 
@@ -23,15 +22,19 @@ class InvalidValueError(RuleError):
         
 
 class Router():
-
-    __routes = routes
     __app = None
+    __endpoints = set()
     
     def __init__(self, app: Flask):
         self.__app = app
     
-    def register(self):
-        for group in self.__routes:
+    def register(self, *routes):
+        if len(routes) == 1:
+            routes = routes[0]
+        else:
+            routes = self.__unpack_routes(routes)
+
+        for group in routes:
             try:
                 for rule in group:
                     # Validate rule fields
@@ -43,16 +46,19 @@ class Router():
                     view = rule.get('view')
                     methods = rule.get('method', ['GET'])
                     
+                    # Add route to application
                     self.__app.add_url_rule(route, \
                         endpoint, \
                         view, \
                         methods=methods)
+                    
+                    self.__endpoints.add(endpoint)
             except RuleError as e:
-                self.__register_error(e)
-                
+                self.__register_error(e)            
 
     def __validate_rule(self, rule: dict):
-        if findall(r'[\d\W]', rule.get('endpoint', '')):
+        
+        if findall(r'[^\.A-z]', rule.get('endpoint', '')):
             raise InvalidCharsError('endpoint')
         
         if not rule.get('route', None):
@@ -73,5 +79,52 @@ class Router():
             print(error)
         else:
             raise error
+
+    def __unpack_routes(self, pack):
+        unpacked = []
+        for routes in pack:
+            unpack += routes
+        return unpacked
+
+class RouteBuilder():
+    
+    __endpoint = ''
+    __rule = ''
+    __view = None
+    __methods = set('GET')
+
+    def __init__(self, endpoint):
+        self.__endpoint = endpoint
+    
+    def view(self, view):
+        self.__view = view
+        return self
+
+    def rule(self, rule):
+        self.__rule = rule
+    
+    def methods(self, *methods):
+        if not methods:
+            # TODO: Specific exception
+            raise Exception
+        self.__methods = set(method.upper() for method in method)
+        return self
+    
+    def build(self):
+        # TODO: Specific exceptions
+        if not self.__rule:
+            raise Exception
         
+        if not self.__view:
+            raise Exception
+
+        return {
+            'endpoint': self.__endpoint,
+            'rule': self.__rule,
+            'view': self.__view,
+            'methods': self.__methods
+        }
+
         
+
+    
