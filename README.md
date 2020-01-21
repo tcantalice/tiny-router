@@ -15,9 +15,9 @@ Exemplo:
 routes = [
     {
         'endpoint': 'rota.exemplo',
-        "rule": '/exemplo',
-        "view": view_exemplo,
-        "methods": ['GET', 'POST'] 
+        'rule': '/exemplo',
+        'view': view_exemplo,
+        'methods': ['GET', 'POST'] 
     }
 ]
 ```
@@ -32,7 +32,7 @@ Exemplo:
 routes = [
     {
         ...
-        "methods": ['GET']
+        'methods': ['GET']
     }
 ]
 ```
@@ -41,7 +41,7 @@ Pode utilizar o construtor de rotas - RouteBuilder
 
 Código:
 ```python
-from flaskrouter.router import RouteBuilder as Route
+from flask_router.router import RouteBuilder as Route
 
 Route('user.index').rule('/user').view(hello)
     .methods('GET').build()

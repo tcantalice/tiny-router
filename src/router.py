@@ -86,24 +86,45 @@ class Router():
             unpack += routes
         return unpacked
 
-class RouteBuilder():
+class Route():
     
     __endpoint = ''
     __rule = ''
     __view = None
-    __methods = set('GET')
-
-    def __init__(self, endpoint):
-        self.__endpoint = endpoint
+    __methods = {'GET'}
     
+    __parameters = dict()
+
+    def __init__(self, endpoint, rule, view, methods={'GET'}):
+        self.__endpoint = endpoint
+        self.view(view)
+        self.__rule = rule
+
+
     def view(self, view):
+        '''Set view for route
+        '''
+        # Required view
+        if not view: raise Exception
+        
+        # Required callable view
+        if not callable(view): raise TypeError('View needs to be callable')
+
         self.__view = view
-        return self
 
     def rule(self, rule):
+        '''Set rule pattern for route
+        '''
+        if rule[:1] != '/':
+            rule = '/' + rule
+        
+        
         self.__rule = rule
+        return self
     
     def methods(self, *methods):
+        '''Set methods for route
+        '''
         if not methods:
             # TODO: Specific exception
             raise Exception
@@ -124,7 +145,5 @@ class RouteBuilder():
             'view': self.__view,
             'methods': self.__methods
         }
-
-        
 
     
