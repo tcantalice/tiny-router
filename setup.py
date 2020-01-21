@@ -15,8 +15,7 @@ __license__ = 'GNU GPLv3'
 setup(
     name=__name__,
     version=__version__,
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
+    packages=find_packages(),
     install_requires=__requirements__,
     author=__author__,
     author_email=__author_email__,
