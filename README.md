@@ -41,7 +41,7 @@ Pode utilizar o construtor de rotas - Route
 
 Código:
 ```python
-from tiny_router import Route
+from tinyrouter import Route
 from views import user_index
 
 Route('user.index', '/user', user_index)
@@ -60,7 +60,7 @@ Esta função irá funcionar igual ao bloco:
 Primeiro cria uma instância do roteador
 ```python
 from flask import Flask
-from tiny_router import Router
+from tinyrouter import Router
 
 app = Flask(__name__)
 router = Router(app)
