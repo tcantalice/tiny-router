@@ -1,5 +1,5 @@
-# Flask-Router
-Flask-Router é um roteador de caminhos para aplicações [Flask](https://github.com/pallets/flask). A biblioteca fornece um conjunto de normas simples para registrar as rotas da aplicação.
+# Tiny Router
+Tiny Router é um roteador de caminhos para aplicações [Flask](https://github.com/pallets/flask). A biblioteca fornece um conjunto de normas simples para registrar as rotas da aplicação.
 
 ## Criando rotas
 
@@ -37,21 +37,21 @@ routes = [
 ]
 ```
 
-Pode utilizar o construtor de rotas - RouteBuilder
+Pode utilizar o construtor de rotas - Route
 
 Código:
 ```python
-from flask_router.router import RouteBuilder as Route
+from tiny_router import Route
+from views import user_index
 
-Route('user.index').rule('/user').view(hello)
-    .methods('GET').build()
+Route('user.index', '/user', user_index)
 ```
 Esta função irá funcionar igual ao bloco:
 ```python
 {
     'endpoint': 'user.index',
     'rule': '/user',
-    'view': hello,
+    'view': user_index,
     'methods': ('GET')
 }
 ```
@@ -60,7 +60,7 @@ Esta função irá funcionar igual ao bloco:
 Primeiro cria uma instância do roteador
 ```python
 from flask import Flask
-from flaskrouter import Router
+from tiny_router import Router
 
 app = Flask(__name__)
 router = Router(app)
