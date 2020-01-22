@@ -132,7 +132,7 @@ class Route():
         if not methods:
             # TODO: Specific exception
             raise Exception
-        self.__methods = set(method.upper() for method in method)
+        self.__methods = set(method.upper() for method in methods)
 
     def __extract_parameters(self):
         '''Extract parameter from rule
@@ -149,11 +149,13 @@ class Route():
             parameter = path.split(':') if path.find(':') else ['string', path]
             self.__parameters[parameter[1]] = parameter[0]
 
+    def __str__(self):
+        return '''{{
+endpoint: '{}',
+rule: '{}',
+view: '{}',
+methods: {}
+}}'''.format(self.__endpoint,self.__rule,self.__view.__name__,repr(self.__methods))
+    
     def __repr__(self):
-
-        return {
-            'endpoint': self.__endpoint,
-            'rule': self.__rule,
-            'view': self.__view,
-            'methods': self.__methods
-        }
+        return str(self)
