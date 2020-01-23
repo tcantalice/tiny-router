@@ -39,27 +39,23 @@ class Router():
     def register(self, *routes):
         '''Registra as rotas dentro da aplicação
         '''
-        if len(routes) == 1:
-            routes = routes[0]
-        else:
-            routes = self.__unpack_routes(routes)
 
         for group in routes:
             try:
                 for route in group:
                     # Validate rule fields
-                    self.__validate_route(rule)
+                    self.__validate_route(route)
 
                     # Get values from rule
-                    endpoint = route.get('endpoint', '')
-                    rule = route.get('rule')
-                    view = route.get('view')
-                    methods = route.get('method', ['GET'])
+                    endpoint = route.endpoint
+                    rule = route.rule
+                    view = route.view
+                    methods = route.methods
 
                     # Add route to application
-                    self.__app.add_url_rule(rule,
-                                            endpoint,
-                                            view,
+                    self.__app.add_url_rule(rule,\
+                                            endpoint,\
+                                            view,\
                                             methods=methods)
 
                     self.__endpoints.add(endpoint)
@@ -67,19 +63,19 @@ class Router():
                 self.__register_error(e)
 
 
-    def __validate_route(self, rule: dict):
+    def __validate_route(self, route):
         '''Validador da rota
         '''
-        if findall(r'[^\.A-z]', rule.get('endpoint', '')):
+        if findall(r'[^\.A-z]', route.endpoint):
             raise InvalidCharsError('endpoint')
 
-        if not rule.get('route', None):
-            raise FieldRequiredError('route')
+        if not route.rule:
+            raise FieldRequiredError('rule')
 
-        if not rule.get('view', None):
+        if not route.view:
             raise FieldRequiredError('view')
 
-        if not callable(rule.get('view')):
+        if not callable(route.view):
             raise InvalidValueError('view')
 
 
@@ -91,51 +87,46 @@ class Router():
         else:
             raise error
 
-
-    def __unpack_routes(self, pack):
-        unpacked = []
-        for routes in pack:
-            unpack += routes
-        return unpacked
-
-
 class Route():
-
-    __slots__ = ('__endpoint', '__rule',
-        '__view', '__methods',
-        '__parameters',)
 
     def __init__(self, endpoint, rule, view, methods={'GET'}):
         self.__endpoint = endpoint
-        self.view(view)
-        self.rule(rule)
-        self.methods(*methods)
-        self.__parameters = dict()
-
-    def view(self, view):
-        '''Set view for route
-        '''
         self.__view = view
-
-    def rule(self, rule: str):
-        '''Set rule pattern for route
-        '''
-        # Added slash on start if not found
+        
         if not rule.startswith('/'):
-            rule = '/' + rule
-
+            rule = rule + '/'
+        
         self.__rule = rule
-
-    def methods(self, *methods):
-        '''Set methods for route
-        '''
-        if not methods:
-            # TODO: Specific exception
-            raise Exception
         self.__methods = set(method.upper() for method in methods)
+        self.__parameters = dict()
+        self.__extract_parameters()
+
+    @property
+    def view(self):
+        return self.__view
+
+    @property
+    def endpoint(self):
+        return self.__endpoint
+
+    @property
+    def rule(self):
+        return self.__rule
+    
+    @rule.setter
+    def rule(self, value):
+        self.__rule = value
+
+    @property
+    def methods(self):
+        return self.__methods
+
+    @property
+    def parameters(self):
+        return self.__parameters
 
     def __extract_parameters(self):
-        '''Extract parameter from rule
+        '''Extrai os parâmetros da url
         '''
         pattern = compile_re(r'<([A-z]+:)?([A-z_]+)>')
 
@@ -150,12 +141,8 @@ class Route():
             self.__parameters[parameter[1]] = parameter[0]
 
     def __str__(self):
-        return '''{{
-endpoint: '{}',
-rule: '{}',
-view: '{}',
-methods: {}
-}}'''.format(self.__endpoint,self.__rule,self.__view.__name__,repr(self.__methods))
-    
-    def __repr__(self):
-        return str(self)
+        return '{0} - (view:{1}|endpoint:{2}|methods:{3})'.format(
+            self.__rule,
+            self.__view.__name__,
+            self.__endpoint,
+            repr(self.__methods))
