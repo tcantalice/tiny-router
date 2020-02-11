@@ -25,10 +25,11 @@ setup(
     long_description=__long_description__,
     license=__license__,
     classifiers=[
-        'Development Status :: 4 - Beta',
         'Framework :: Flask',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
     ],
-    url=__url__
+    url=__url__,
+    long_description_content_type='text/markdown'
 )
