@@ -148,8 +148,8 @@ class Route():
             self.__parameters[parameter[1]] = parameter[0]
 
     def __str__(self):
-        return '{0} - (view:{1}|endpoint:{2}|methods:{3})'.format(
-            self.__rule,
-            self.__view.__name__,
+        return '{0} - (view: {1} | rule: {2} | methods: {3})'.format(
             self.__endpoint,
+            self.__view.__name__,
+            self.__rule,
             repr(self.__methods))
