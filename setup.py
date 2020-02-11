@@ -13,7 +13,8 @@ __url__ = 'https://github.com/tcantalice/tiny-router'
 with open('README.md', 'r') as readme:
     __long_description__ = readme.read()
 
-__license__ = 'GNU GPLv3'
+__license__ = 'MIT'
+
 setup(
     name=__name__,
     version=__version__,
@@ -26,7 +27,7 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Framework :: Flask',
-        'License :: GNU GLPv3',
+        'License :: MIT',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
     ],
