@@ -2,9 +2,15 @@ from flask import Flask
 from re import findall, match
 from re import compile as compile_re
 
+ENDPOINT_VALID_CHARS_REGEX = r'[^\.A-z]'
+PARAM_VALID_CHARS_REGEX = r'<([A-z]+:)?([A-z_]+)>'
 
 class RuleError(Exception):
-    ...
+    message: str
+
+    def __str__(self):
+        txt = '{}: {}'.format(self.__class__.__name__, self.message)
+        return txt
 
 
 class FieldRequiredError(RuleError):
@@ -66,7 +72,7 @@ class Router():
     def __validate_route(self, route):
         '''Validador da rota
         '''
-        if findall(r'[^\.A-z]', route.endpoint):
+        if not findall(ENDPOINT_VALID_CHARS_REGEX, route.endpoint):
             raise InvalidCharsError('endpoint')
 
         if not route.rule:
@@ -87,6 +93,7 @@ class Router():
         else:
             raise error
 
+
 class Route():
 
     def __init__(self, endpoint, rule, view, methods={'GET'}):
@@ -94,7 +101,7 @@ class Route():
         self.__view = view
         
         if not rule.startswith('/'):
-            rule = rule + '/'
+            rule = '/' + rule
         
         self.__rule = rule
         self.__methods = set(method.upper() for method in methods)
@@ -128,12 +135,12 @@ class Route():
     def __extract_parameters(self):
         '''Extrai os parâmetros da url
         '''
-        pattern = compile_re(r'<([A-z]+:)?([A-z_]+)>')
+        pattern_param = compile_re(PARAM_VALID_CHARS_REGEX)
 
         paths = self.__rule.split('/')
 
         for path in paths:
-            if not pattern.match(path):
+            if not pattern_param.match(path):
                 continue
 
             path = path.strip('<>')
