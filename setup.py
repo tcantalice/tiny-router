@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 __name__ = 'tinyrouter'
-__version__ = '0.1.dev1' # TODO: Adopt a standard versioning
+__version__ = '0.1.3' # TODO: Adopt a standard versioning
 
 __author__ = 'Tarcisio Cantalice'
 __author_email__ = 'tarcisiocantalice@gmail.com'
