@@ -71,7 +71,7 @@ class Router():
     def __validate_route(self, route):
         '''Validador da rota
         '''
-        if not findall(ENDPOINT_VALID_CHARS_REGEX, route.endpoint):
+        if findall(ENDPOINT_VALID_CHARS_REGEX, route.endpoint):
             raise InvalidCharsError('endpoint')
 
         if not route.rule:
@@ -98,7 +98,7 @@ class Route():
         self.__endpoint = endpoint
         self.__view = view
 
-        if rule.startswith('/'):
+        if not rule.startswith('/'):
             rule = '/' + rule
 
         self.__rule = rule
