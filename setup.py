@@ -1,14 +1,16 @@
 from setuptools import setup, find_packages
 
 __name__ = 'tinyrouter'
-__version__ = '0.1.4' # TODO: Adopt a standard versioning
+
+# TODO: Adopt a standard versioning
+__version__ = '0.2'
 
 __author__ = 'Tarcisio Cantalice'
 __author_email__ = 'tarcisiocantalice@gmail.com'
 
 __requirements__ = ['flask']
 
-__url__ = 'https://github.com/tcantalice/tiny-router'
+__url__ = 'https://github.com/tcantalice/tinyrouter'
 
 with open('README.md', 'r') as readme:
     __long_description__ = readme.read()
