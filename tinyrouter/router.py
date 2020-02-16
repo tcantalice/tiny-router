@@ -5,6 +5,7 @@ from re import compile as compile_re
 ENDPOINT_VALID_CHARS_REGEX = r'[^\.A-z]'
 PARAM_VALID_CHARS_REGEX = r'<([A-z]+:)?([A-z_]+)>'
 
+
 class RuleError(Exception):
     message: str
 
@@ -41,7 +42,6 @@ class Router():
     def __init__(self, app: Flask):
         self.__app = app
 
-
     def register(self, *routes):
         '''Registra as rotas dentro da aplicação
         '''
@@ -59,15 +59,14 @@ class Router():
                     methods = route.methods
 
                     # Add route to application
-                    self.__app.add_url_rule(rule,\
-                                            endpoint,\
-                                            view,\
+                    self.__app.add_url_rule(rule,
+                                            endpoint,
+                                            view,
                                             methods=methods)
 
                     self.__endpoints.add(endpoint)
             except RuleError as e:
                 self.__register_error(e)
-
 
     def __validate_route(self, route):
         '''Validador da rota
@@ -84,7 +83,6 @@ class Router():
         if not callable(route.view):
             raise InvalidValueError('view')
 
-
     def __register_error(self, error):
         '''Retorno de error do registrador
         '''
@@ -99,10 +97,10 @@ class Route():
     def __init__(self, endpoint, rule, view, methods={'GET'}):
         self.__endpoint = endpoint
         self.__view = view
-        
-        if not rule.startswith('/'):
+
+        if rule.startswith('/'):
             rule = '/' + rule
-        
+
         self.__rule = rule
         self.__methods = set(method.upper() for method in methods)
         self.__parameters = dict()
@@ -119,7 +117,7 @@ class Route():
     @property
     def rule(self):
         return self.__rule
-    
+
     @rule.setter
     def rule(self, value):
         self.__rule = value
